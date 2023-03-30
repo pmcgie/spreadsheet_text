@@ -24,7 +24,7 @@ export const dataToRows = (data, pivot, groups, value, id) => {
         out.push([
           ...cur_group,
           ...pivots.map((p) => {
-            return p && p[value] ? p[value] : null;
+            return p && p[String(value)] ? p[String(value)] : null;
           }),
           JSON.stringify(
             pivots.map((p) => {
@@ -46,8 +46,7 @@ export const dataToRows = (data, pivot, groups, value, id) => {
   };
 };
 
-export const changesToData = (array_data, changes, row_total = false) => {
-  const { data, value, groups, id } = array_data;
+export const changesToData = (changes) => {
   const latest = [];
   changes.reverse().forEach((change) => {
     const found_cell = find(latest, { row: change[0], column: change[1] });

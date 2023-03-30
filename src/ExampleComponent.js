@@ -5,7 +5,7 @@ import find from 'lodash/find'
 import filter from 'lodash/filter'
 import { HotTable, HotColumn } from "@handsontable/react";
 import "handsontable/dist/handsontable.min.css";
-import { registerPlugin, AutoColumnSize, Autofill, ColumnSummary, ColumnSorting, ManualColumnFreeze, ContextMenu, DropdownMenu, UndoRedo} from 'handsontable/plugins';
+import { registerPlugin, AutoColumnSize, Autofill, ColumnSummary, ColumnSorting, ManualColumnFreeze, ContextMenu} from 'handsontable/plugins';
 import { HyperFormula } from 'hyperformula';
 import { changesToData, dataToRows } from './helpers';
 registerPlugin(AutoColumnSize);
@@ -14,8 +14,6 @@ registerPlugin(ColumnSummary);
 registerPlugin(ColumnSorting );
 registerPlugin(ManualColumnFreeze);
 registerPlugin(ContextMenu);
-registerPlugin(DropdownMenu);
-registerPlugin(UndoRedo);
 
 const hf = HyperFormula.buildEmpty({
     // to use an external HyperFormula instance,
@@ -42,9 +40,7 @@ const ExampleSpreadsheet = ({ triggerQuery, model, modelUpdate }) => {
     useEffect(()=>{
         if (all_changes && all_changes.length) {
             const updated_data = changesToData(
-                formatted_data, 
-                all_changes,
-                (model.totals.row_total)?model.totals.row_total:true
+                all_changes
             )
             modelUpdate({updated_data})
         }
