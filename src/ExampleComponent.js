@@ -75,7 +75,7 @@ const ExampleSpreadsheet = ({ triggerQuery, model, modelUpdate }) => {
         let classNames = [];
         if (all_changes.length) {
           
-            const found = all_changes.filter(o=> o[0]===row && o[1]===col)
+            const found = all_changes.filter(o=> o[1]===row && o[1]===col)
             if (found.length) {
               return {className: 'changed_cell'}
             }
