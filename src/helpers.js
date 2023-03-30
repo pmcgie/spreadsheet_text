@@ -55,9 +55,10 @@ export const changesToData = (array_data, changes, row_total = false) => {
       latest.push({
         row: change[0],
         column: change[1],
-        new_val: change[3],
+        new_val: change,
       });
     }
+    console.console.log(change[2]);
   });
   return latest.map((item) => {
     const row = data[item.row];
