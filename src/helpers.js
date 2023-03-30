@@ -54,7 +54,7 @@ export const changesToData = (changes) => {
       latest.push({
         row: change[0],
         column: change[1],
-        new_val: change[3],
+        new_val: String(change[3]),
       });
     }
   });

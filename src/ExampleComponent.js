@@ -38,12 +38,10 @@ const ExampleSpreadsheet = ({ triggerQuery, model, modelUpdate }) => {
     },[model])
 
     useEffect(()=>{
-        if (all_changes && all_changes.length) {
             const updated_data = changesToData(
                 all_changes
             )
             modelUpdate({updated_data})
-        }
     },[all_changes])
 
     const refreshData = () => {
