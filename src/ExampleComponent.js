@@ -46,7 +46,7 @@ const ExampleSpreadsheet = ({ triggerQuery, model, modelUpdate }) => {
                 all_changes,
                 (model.totals.row_total)?model.totals.row_total:false
             )
-            modelUpdate({updated_data})
+            /*modelUpdate({updated_data})*/
         }
     },[all_changes])
 
