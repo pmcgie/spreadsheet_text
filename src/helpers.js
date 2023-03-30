@@ -24,7 +24,7 @@ export const dataToRows = (data, pivot, groups, value, id) => {
         out.push([
           ...cur_group,
           ...pivots.map((p) => {
-            return p && p[String(value)] ? p[String(value)] : null;
+            return p && p[value] ? p[value] : null;
           }),
           JSON.stringify(
             pivots.map((p) => {
@@ -52,9 +52,9 @@ export const changesToData = (changes) => {
     const found_cell = find(latest, { row: change[0], column: change[1] });
     if (!found_cell) {
       latest.push({
-        row: change[0],
-        column: change[1]
-        /*new_val: String(change[3]),*/
+        /*row: change[0],*/
+        column: change[1],
+        new_val: String(change[3])
       });
     }
   });

@@ -38,9 +38,9 @@ const ExampleSpreadsheet = ({ triggerQuery, model, modelUpdate }) => {
     },[model])
 
     useEffect(()=>{
-            const updated_data = changesToData(
-                all_changes
-            )
+            /*const updated_data = changesToData(
+                formatted_data
+            )*/
             modelUpdate({updated_data})
     },[all_changes])
 
