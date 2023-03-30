@@ -55,7 +55,7 @@ export const changesToData = (array_data, changes, row_total = false) => {
       latest.push({
         row: change[0],
         column: change[1],
-        new_val: change[1],
+        new_val: change[3],
       });
     }
   });
@@ -66,7 +66,7 @@ export const changesToData = (array_data, changes, row_total = false) => {
     const data_id = JSON.parse(row[row.length - 1])[id_index];
     return {
       [id]: data_id,
-      [value]: item.new_val,
+      [value]: String(item.new_val),
     };
   });
 };
