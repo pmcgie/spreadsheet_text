@@ -44,7 +44,7 @@ const ExampleSpreadsheet = ({ triggerQuery, model, modelUpdate }) => {
             const updated_data = changesToData(
                 formatted_data, 
                 all_changes,
-                (model.totals.row_total)?model.totals.row_total:false
+                (model.totals.row_total)?model.totals.row_total:true
             )
             modelUpdate({updated_data})
         }
