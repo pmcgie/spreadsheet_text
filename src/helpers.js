@@ -66,7 +66,7 @@ export const changesToData = (array_data, changes, row_total = false) => {
     const data_id = JSON.parse(row[row.length - 1])[id_index];
     return {
       [id]: data_id,
-      [value]: Number(item.new_val),
+      [value]: item.new_val,
     };
   });
 };
