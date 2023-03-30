@@ -53,8 +53,8 @@ export const changesToData = (changes) => {
     if (!found_cell) {
       latest.push({
         row: change[0],
-        column: change[1],
-        new_val: String(change[3]),
+        column: change[1]
+        /*new_val: String(change[3]),*/
       });
     }
   });
