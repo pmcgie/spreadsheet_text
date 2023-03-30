@@ -43,8 +43,7 @@ const ExampleSpreadsheet = ({ triggerQuery, model, modelUpdate }) => {
         if (all_changes && all_changes.length) {
             const updated_data = changesToData(
                 formatted_data, 
-                all_changes,
-                (model.totals.row_total)?model.totals.row_total:false
+                all_changes
             )
             modelUpdate({updated_data})
         }
@@ -56,11 +55,6 @@ const ExampleSpreadsheet = ({ triggerQuery, model, modelUpdate }) => {
             setAllChanges([]);
             modelUpdate({updated_data: []})
             let formatted = dataToRows(model.data, model.pivot,model.groups, model.value, model.id)
-            if (model.totals && formatted && formatted.data && formatted.data.length) {
-                if (model.totals.row_total) { formatted = applyRow(formatted) };
-                if (model.totals.sub_total) formatted = applySub(formatted);
-                if (model.totals.grand_total) { formatted = applyGrand(formatted) };
-            }
             setFormattedData(formatted);
             if (formatted && formatted.data && formatted.data.length) {
                 hf.setSheetContent(sheetId, formatted.data);
@@ -85,15 +79,6 @@ const ExampleSpreadsheet = ({ triggerQuery, model, modelUpdate }) => {
             if (found.length) {
               return {className: 'changed_cell'}
             }
-        }
-        if (formatted_data.grand_total_row && row === formatted_data.grand_total_row) {
-            classNames.push('grand_total')
-        }
-        if (formatted_data.row_total_column && col === formatted_data.row_total_column) {
-            classNames.push('row_total')
-        }
-        if (formatted_data.sub_total_rows && formatted_data.sub_total_rows.indexOf(row) > -1) {
-            classNames.push('sub_total')
         }
         if (classNames.length) {
             return {className: classNames.join(' '), readOnly: true}
