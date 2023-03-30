@@ -49,7 +49,7 @@ const ExampleSpreadsheet = ({ triggerQuery, model, modelUpdate }) => {
             setData(model.data);
             setAllChanges([]);
             modelUpdate({updated_data: []})
-            let formatted = dataToRows(model.data, model.pivot,model.groups, model.value, model.id)
+            let formatted = dataToRows(model.data, model.pivot,model.groups, String(model.value), model.id)
             setFormattedData(formatted);
             if (formatted && formatted.data && formatted.data.length) {
                 hf.setSheetContent(sheetId, formatted.data);
