@@ -1,3 +1,4 @@
+import { licenseKey } from '../config.json';
 import React, { useCallback, useEffect, useState } from 'react';
 import './styles.css'
 import isEqual from 'lodash/isEqual'
@@ -111,7 +112,8 @@ const ExampleSpreadsheet = ({ triggerQuery, model, modelUpdate }) => {
             manualColumnFreeze={(model.fixedColumnsLeft && Number(model.fixedColumnsLeft)>0)?true:false}
             fixedColumnsLeft={(model.fixedColumnsLeft && Number(model.fixedColumnsLeft)>0)?model.fixedColumnsLeft:0}
             data={formatted_data.data}
-            licenseKey="non-commercial-and-evaluation"
+            licenseKey={licenseKey}
+            colWidths={model.colWidths}
             autoColumnSize={true}
             fillHandle={{
                 autoInsertRow: false,
