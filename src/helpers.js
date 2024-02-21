@@ -162,7 +162,7 @@ export const applyGrand = (formatted_data) => {
     formatted_data;
 
   // Map over each row and remove characters $ and , from each cell
-  const altered_data = altered_data.map(row => row.map(cell => cell.replace(/[$,]/g, '')));
+  let altered_data = data.map(row => row.map(cell => cell.replace(/[$,]/g, '')));
 
   const id_column_index = columns.indexOf("_ids");
   
@@ -181,13 +181,13 @@ export const applyGrand = (formatted_data) => {
   const sums = col_pivots.map((cp) => {
     let sum = 0;
     for (let i of filtered) {
-      sum += parseFloat(data[i][cp]) || 0;
+      sum += parseFloat(altered_data[i][cp]) || 0;
     }
     return sum.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
-  });
+    });
 
   // If data doesn't exist, return the original formatted_data
-  if (!altered_data) 
+  if (!data) 
     return formatted_data;
 
   // Add a new row to data containing the "Grand Total" label and the sums
