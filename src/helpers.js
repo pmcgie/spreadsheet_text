@@ -160,7 +160,7 @@ export const applySub = (formatted_data) => {
 export const applyGrand = (formatted_data) => {
   let { data, groups, columns, pivot_values, row_total_column } =
     formatted_data;
-  
+
   const altered_data = data.map(row => row.map(cell => cell.replace(/[$,]/g, '')));
 
   const id_column_index = columns.indexOf("_ids");
@@ -170,11 +170,14 @@ export const applyGrand = (formatted_data) => {
   if (row_total_column && row_total_column > -1) {
     col_pivots.splice(0, 0, row_total_column);
   }
+
   const sums = col_pivots.map((cp) => {
     return filtered.map((f) => {
-      return `${cellToGrid(cp, f)}`;
+      // Modify cellToGrid to return references without commas
+      return cellToGrid(cp, f).replace(/[$,]/g, '');
     });
   });
+
   if (!data) return formatted_data;
 
   data.push([
@@ -188,6 +191,7 @@ export const applyGrand = (formatted_data) => {
     grand_total_row: data.length - 1,
   };
 };
+
 
 const colToLetter = (col) => {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
