@@ -173,9 +173,15 @@ export const applyGrand = (formatted_data) => {
     });
   });
   if (!data) return formatted_data;
+
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
-    ...sums.map((s) => `=SUM(${s.join(",")})`),
+    ...sums.map((s) => {
+      const sumString = `=SUM(${s.join(",")})`;
+      const sumWithoutCommas = sumString.replace(/,/g, '');
+      const sumAsInteger = parseInt(sumWithoutCommas, 10);
+      return sumAsInteger.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    })
   ]);
   return {
     ...formatted_data,
