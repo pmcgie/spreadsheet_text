@@ -159,7 +159,13 @@ export const applySub = (formatted_data) => {
 
 // Utility function to extract integers from a string
 const extractIntegersFromString = (str) => {
-  const matches = str.match(/\d+/g);
+  // Replace dollar signs and commas with nothing
+  const cleanStr = str.replace(/[$,]/g, '');
+
+  // Extract integers from the cleaned string
+  const matches = cleanStr.match(/\d+/g);
+
+  // Convert matches to integers
   return matches ? matches.map(match => parseInt(match, 10)) : [];
 };
 
