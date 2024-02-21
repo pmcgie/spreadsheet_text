@@ -176,15 +176,16 @@ export const applyGrand = (formatted_data) => {
     });
   });
 
-  if (!data) { 
-  formatted_data = {
-    ...formatted_data,
-    // Assuming there are specific properties in formatted_data that need commas replaced
-    // Replace commas with nothing for those properties
-    property1: formatted_data.property1 && formatted_data.property1.replace(/,/g, ''),
-    property2: formatted_data.property2 && formatted_data.property2.replace(/,/g, ''),
-    // Add more properties as needed
-  };   return formatted_data;} else {
+  if (!data) {
+    // Replace commas with nothing in formatted_data properties
+    for (const prop in formatted_data) {
+      if (formatted_data.hasOwnProperty(prop) && typeof formatted_data[prop] === 'string') {
+        formatted_data[prop] = formatted_data[prop].replace(/,/g, '');
+      }
+    }
+  
+    return formatted_data;
+  } else {
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
     // Join the values with commas and wrap the entire expression in SUM
