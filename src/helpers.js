@@ -183,7 +183,7 @@ export const applyGrand = (formatted_data) => {
     for (let i of filtered) {
       sum += parseFloat(data[i][cp]) || 0;
     }
-    return sum;
+    return sum.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
   });
 
   // If data doesn't exist, return the original formatted_data
@@ -193,7 +193,7 @@ export const applyGrand = (formatted_data) => {
   // Add a new row to data containing the "Grand Total" label and the sums
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
-    ...sums.map((s) => `=SUM(${s}).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 })`),
+    ...sums.map((s) => s),
   ]);
 
   return {
