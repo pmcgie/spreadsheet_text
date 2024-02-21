@@ -160,6 +160,7 @@ export const applySub = (formatted_data) => {
 export const applyGrand = (formatted_data) => {
   let { data, groups, columns, pivot_values, row_total_column } =
     formatted_data;
+  data = data.map(row => row.map(cell => cell.replace(/[$,]/g, '')));
   const id_column_index = columns.indexOf("_ids");
   const filtered = [...data.keys()].filter((i) => data[i][id_column_index]);
 
@@ -169,7 +170,7 @@ export const applyGrand = (formatted_data) => {
   }
   const sums = col_pivots.map((cp) => {
     return filtered.map((f) => {
-      return parseInt((cellToGrid(cp, f) || "").replace(/,/g, ''), 10);
+      return `${cellToGrid(cp, f)}`;
     });
   });
   if (!data) return formatted_data;
