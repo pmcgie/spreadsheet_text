@@ -177,7 +177,7 @@ export const applyGrand = (formatted_data) => {
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
     ...sums.map((s) => {
-      const sumString = `=SUM(${s.join(",")})`;
+      const sumString = `=SUM(${s.map(val => `"${val}"`).join(",")})`;
       const sumWithoutCommas = sumString.replace(/,/g, '');
       const sumAsInteger = parseInt(sumWithoutCommas, 10);
       return sumAsInteger.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
