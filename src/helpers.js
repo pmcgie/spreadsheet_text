@@ -157,6 +157,13 @@ export const applySub = (formatted_data) => {
   };
 };
 
+// Utility function to extract integers from a string
+const extractIntegersFromString = (str) => {
+  const matches = str.match(/\d+/g);
+  return matches ? matches.map(match => parseInt(match, 10)) : [];
+};
+
+// Updated applyGrand function
 export const applyGrand = (formatted_data) => {
   let { data, groups, columns, pivot_values, row_total_column } =
     formatted_data;
@@ -167,23 +174,29 @@ export const applyGrand = (formatted_data) => {
   if (row_total_column && row_total_column > -1) {
     col_pivots.splice(0, 0, row_total_column);
   }
+
   const sums = col_pivots.map((cp) => {
     return filtered.map((f) => {
-      return `${cellToGrid(cp, f)}`;
+      const cellValue = cellToGrid(cp, f);
+      const integers = extractIntegersFromString(cellValue);
+      return integers.length > 0 ? integers.reduce((sum, num) => sum + num, 0) : 0;
     });
   });
+
   if (!data) return formatted_data;
 
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
-    ...sums.map((s) => `=SUM(${parseInt(s.replace(/[$,]/g, ''), 10)})`)
+    ...sums.map((s) => `=SUM(${s.join(",")})`)
   ]);
+
   return {
     ...formatted_data,
     data,
     grand_total_row: data.length - 1,
   };
 };
+
 
 const colToLetter = (col) => {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
