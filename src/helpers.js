@@ -177,10 +177,15 @@ export const applyGrand = (formatted_data) => {
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
     ...sums.map((s) => {
-      const sumString = `=SUM(${s.map(val => `"${val}"`).join(",")})`;
-      const sumWithoutCommas = sumString.replace(/,/g, '');
-      const sumAsInteger = parseInt(sumWithoutCommas, 10);
-      return sumAsInteger.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+      const integers = s.map(val => parseInt(val.replace(/[$,]/g, ''), 10) || 0);
+      const sumAsInteger = integers.reduce((acc, val) => acc + val, 0);
+  
+      // Check if the conversion resulted in NaN
+      const formattedSum = isNaN(sumAsInteger)
+        ? "Invalid Value" // You can replace this with any default value or handle it as appropriate
+        : sumAsInteger.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  
+      return formattedSum;
     })
   ]);
   return {
