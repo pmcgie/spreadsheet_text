@@ -161,27 +161,39 @@ export const applyGrand = (formatted_data) => {
   let { data, groups, columns, pivot_values, row_total_column } =
     formatted_data;
 
-  if (!data) return formatted_data;
+  // Map over each row and remove characters $ and , from each cell
+  let altered_data = data.map(row => row.map(cell => cell.replace(/[$,]/g, '')));
 
   const id_column_index = columns.indexOf("_ids");
-  const filtered = data.filter(row => row[id_column_index]);
+  
+  // Filter rows based on the truthiness of the corresponding cell in the "_ids" column
+  const filtered = [...altered_data.keys()].filter((i) => altered_data[i][id_column_index]);
 
+  // Prepare an array of column indices specified in pivot_values
   let col_pivots = pivot_values.map((pv) => columns.indexOf(pv));
+  
+  // Add the index of the row_total_column if it exists
   if (row_total_column && row_total_column > -1) {
     col_pivots.splice(0, 0, row_total_column);
   }
 
+  // Calculate sums for each pivot column using the altered_data
   const sums = col_pivots.map((cp) => {
-    return filtered.map((row) => {
-      // Assuming cellToGrid is a function returning cell references like 'A1', 'B2', etc.
-      const cellReference = cellToGrid(cp, row);
-      return cellReference;
-    });
+    let sum = 0;
+    for (let i of filtered) {
+      sum += parseFloat(altered_data[i][cp]) || 0;
+    }
+    return sum;
   });
 
+  // If data doesn't exist, return the original formatted_data
+  if (!data) 
+    return formatted_data;
+
+  // Add a new row to data containing the "Grand Total" label and the sums
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
-    ...sums.map((s) => `=SUM(${s.map(cell => `'${cell}'`).join(",")})`),
+    ...sums.map((s) => `=SUM(${s})`),
   ]);
 
   return {
@@ -190,8 +202,6 @@ export const applyGrand = (formatted_data) => {
     grand_total_row: data.length - 1,
   };
 };
-
-
 
 
 const colToLetter = (col) => {
