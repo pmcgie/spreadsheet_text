@@ -157,12 +157,6 @@ export const applySub = (formatted_data) => {
   };
 };
 
-// Utility function to extract integers from a string
-const extractIntegersFromString = (str) => {
-  const matches = str.match(/\d+/g);
-  return matches ? matches.map(match => parseInt(match, 10)) : [];
-};
-
 export const applyGrand = (formatted_data) => {
   let { data, groups, columns, pivot_values, row_total_column } =
     formatted_data;
@@ -173,30 +167,16 @@ export const applyGrand = (formatted_data) => {
   if (row_total_column && row_total_column > -1) {
     col_pivots.splice(0, 0, row_total_column);
   }
-
   const sums = col_pivots.map((cp) => {
-    const columnValues = filtered.map((f) => {
-      const cellValue = cellToGrid(cp, f);
-      const integers = extractIntegersFromString(cellValue);
-      console.log(`CellValue: ${cellValue}, Integers: ${integers}`);
-      return integers.length > 0 ? integers.reduce((sum, num) => sum + num, 0) : 0;
+    return filtered.map((f) => {
+      return `${cellToGrid(cp, f)}`;
     });
-    return columnValues.reduce((sum, value) => sum + value, 0); // Sum the values of the column
   });
-
   if (!data) return formatted_data;
-
-  const totalSum = sums.reduce((sum, value) => sum + value, 0); // Sum all values in the sums array
-
-  const currencyFormat = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
-
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
-    currencyFormat.format(totalSum) // Format the total sum as currency
+    ...sums.map((s) => `=SUM(${s.map(value => parseInt(value.replace(/[$,]/g, ''), 10)).join(",")})`),
   ]);
-
-  console.log("Updated Data:", data);
-
   return {
     ...formatted_data,
     data,
