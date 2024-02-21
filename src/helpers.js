@@ -167,23 +167,34 @@ export const applyGrand = (formatted_data) => {
   if (row_total_column && row_total_column > -1) {
     col_pivots.splice(0, 0, row_total_column);
   }
+
   const sums = col_pivots.map((cp) => {
     return filtered.map((f) => {
-      return `${cellToGrid(cp, f)}`.replace(/,/g, '');
+      // Assuming cellToGrid(cp, f) returns numeric values
+      return cellToGrid(cp, f);
     });
   });
+
   if (!data) return formatted_data;
+
+  // Summing up the numeric values without commas
+  const rowTotal = sums[0].map((_, i) =>
+    sums.reduce((total, sum) => total + parseFloat(sum[i] || 0), 0)
+  );
+
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
     // Join the values with commas and wrap the entire expression in SUM
-    ...sums.map((s) => `=SUM(${s.join(",")})`),
-    ]);
+    `=SUM(${rowTotal.join(",")})`,
+  ]);
+
   return {
     ...formatted_data,
     data,
     grand_total_row: data.length - 1,
   };
 };
+
 
 
 
