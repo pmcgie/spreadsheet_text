@@ -161,10 +161,10 @@ export const applyGrand = (formatted_data) => {
   let { data, groups, columns, pivot_values, row_total_column } =
     formatted_data;
 
-  const altered_data = data.map(row => row.map(cell => cell.replace(/[$,]/g, '')));
+  if (!data) return formatted_data;
 
   const id_column_index = columns.indexOf("_ids");
-  const filtered = [...altered_data.keys()].filter((i) => altered_data[i][id_column_index]);
+  const filtered = data.filter(row => row[id_column_index]);
 
   let col_pivots = pivot_values.map((pv) => columns.indexOf(pv));
   if (row_total_column && row_total_column > -1) {
@@ -172,13 +172,12 @@ export const applyGrand = (formatted_data) => {
   }
 
   const sums = col_pivots.map((cp) => {
-    return filtered.map((f) => {
-      // Modify cellToGrid to return references without commas
-      return cellToGrid(cp, f).replace(/[$,]/g, '');
+    return filtered.map((row) => {
+      // Assuming cellToGrid is a function returning cell references like 'A1', 'B2', etc.
+      const cellReference = cellToGrid(cp, row);
+      return `INDIRECT("${cellReference}")`;  // Use INDIRECT to handle cell references with commas
     });
   });
-
-  if (!data) return formatted_data;
 
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
@@ -191,6 +190,7 @@ export const applyGrand = (formatted_data) => {
     grand_total_row: data.length - 1,
   };
 };
+
 
 
 const colToLetter = (col) => {
