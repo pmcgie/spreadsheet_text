@@ -158,16 +158,6 @@ export const applySub = (formatted_data) => {
 };
 
 export const applyGrand = (formatted_data) => {
-  // Helper function to recursively convert values to integers
-  const convertToInteger = (value, columnIndex) => {
-    if (Array.isArray(value)) {
-      return value.map((item, index) => (index === 0 && columnIndex === 0 ? item : convertToInteger(item.replace(/[$,]/g, ''), columnIndex)));
-    }
-  };
-
-  // Convert all values in formatted_data to integers
-  formatted_data = convertToInteger(formatted_data);
-
   let { data, groups, columns, pivot_values, row_total_column } =
     formatted_data;
   const id_column_index = columns.indexOf("_ids");
@@ -177,31 +167,22 @@ export const applyGrand = (formatted_data) => {
   if (row_total_column && row_total_column > -1) {
     col_pivots.splice(0, 0, row_total_column);
   }
-
   const sums = col_pivots.map((cp) => {
     return filtered.map((f) => {
-      // Update this line to parse the cell value to an integer
-      return cellToGrid(cp, f);
+      return `${parseInt(cellToGrid(cp, f).replace(/,/g, ''), 10)}`;
     });
   });
-
   if (!data) return formatted_data;
-
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
     ...sums.map((s) => `=SUM(${s.join(",")})`),
   ]);
-
   return {
     ...formatted_data,
     data,
     grand_total_row: data.length - 1,
   };
 };
-
-
-
-
 
 const colToLetter = (col) => {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
