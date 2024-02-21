@@ -161,21 +161,15 @@ export const applyGrand = (formatted_data) => {
   let { data, groups, columns, pivot_values, row_total_column } =
     formatted_data;
   const id_column_index = columns.indexOf("_ids");
-  const filtered = [...data.keys()].filter((i) => {
-    let value = data[i][id_column_index];
-    if (value) {
-      data[i][id_column_index] = parseInt(value.replace(/[\$,]/g, ''), 10);
-      return true;
-    }
-    return false;
-  });
+  const filtered = [...data.keys()].filter((i) => data[i][id_column_index]);
+
   let col_pivots = pivot_values.map((pv) => columns.indexOf(pv));
   if (row_total_column && row_total_column > -1) {
     col_pivots.splice(0, 0, row_total_column);
   }
   const sums = col_pivots.map((cp) => {
     return filtered.map((f) => {
-      return `${cellToGrid(cp, f)}`;
+      return `${cellToGrid(cp, parseInt(f.replace(/[\$,]/g, ''),10))}`;
     });
   });
   if (!data) return formatted_data;
