@@ -162,12 +162,12 @@ export const applyGrand = (formatted_data) => {
     formatted_data;
 
   // Map over each row and remove characters $ and , from each cell
-  let altered_data = data.map(row => row.map(cell => cell.replace(/[$,]/g, '')));
+  data = data.map(row => row.map(cell => cell.replace(/[$,]/g, '')));
 
   const id_column_index = columns.indexOf("_ids");
   
   // Filter rows based on the truthiness of the corresponding cell in the "_ids" column
-  const filtered = [...altered_data.keys()].filter((i) => altered_data[i][id_column_index]);
+  const filtered = [...data.keys()].filter((i) => data[i][id_column_index]);
 
   // Prepare an array of column indices specified in pivot_values
   let col_pivots = pivot_values.map((pv) => columns.indexOf(pv));
@@ -181,7 +181,7 @@ export const applyGrand = (formatted_data) => {
   const sums = col_pivots.map((cp) => {
     let sum = 0;
     for (let i of filtered) {
-      sum += parseFloat(altered_data[i][cp]) || 0;
+      sum += parseFloat(data[i][cp]) || 0;
     }
     return sum;
   });
@@ -193,7 +193,7 @@ export const applyGrand = (formatted_data) => {
   // Add a new row to data containing the "Grand Total" label and the sums
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
-    ...sums.map((s) => `=SUM(${s})`),
+    ...sums.map((s) => `=SUM(${s.toLocaleString('en-US', { style: 'currency', currency: 'USD' })})`),
   ]);
 
   return {
