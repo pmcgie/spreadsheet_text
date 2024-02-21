@@ -179,8 +179,6 @@ export const applyGrand = (formatted_data) => {
     ...sums.map((s) => `=SUM(${s.join(",")})`),
   ]);
 
-  data = data.map(row => row.map(cell => cell.replace(/[$,]/g, '')))
-
   return {
     ...formatted_data,
     data,
