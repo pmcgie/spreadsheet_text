@@ -186,9 +186,13 @@ export const applyGrand = (formatted_data) => {
 
   if (!data) return formatted_data;
 
+  const totalSum = sums.reduce((sum, value) => sum + value, 0); // Sum all values in the sums array
+
+  const currencyFormat = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
-    ...sums.map((s) => s.toString()) // Convert the sum to a string
+    currencyFormat.format(totalSum) // Format the total sum as currency
   ]);
 
   console.log("Updated Data:", data);
