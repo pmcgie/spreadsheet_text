@@ -175,7 +175,7 @@ export const applyGrand = (formatted_data) => {
   if (!data) return formatted_data;
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
-    ...sums.map((s) => `=SUM(${s.map(value => parseInt(value.replace(/[$,]/g, ''), 10)).join(",")})`),
+    ...sums.map((s) => `=SUM(${s.join(";")})`),
   ]);
   return {
     ...formatted_data,
