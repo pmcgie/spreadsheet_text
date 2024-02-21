@@ -163,6 +163,8 @@ export const applyGrand = (formatted_data) => {
   const id_column_index = columns.indexOf("_ids");
   const filtered = [...data.keys()].filter((i) => data[i][id_column_index]);
 
+  pivot_values = pivot_values.map(row => row.map(cell => cell.replace(/[$,]/g, '')))
+
   let col_pivots = pivot_values.map((pv) => columns.indexOf(pv));
   if (row_total_column && row_total_column > -1) {
     col_pivots.splice(0, 0, row_total_column);
@@ -172,11 +174,13 @@ export const applyGrand = (formatted_data) => {
       return `${cellToGrid(cp, f)}`;
     });
   });
-  if (!data) return data = data.map(row => row.map(cell => cell.replace(/[$,]/g, '')));
+  if (!data) return formatted_data;
+
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
     ...sums.map((s) => `=SUM(${s.join(",")})`),
   ]);
+
 
   return {
     ...formatted_data,
