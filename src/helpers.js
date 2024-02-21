@@ -161,16 +161,7 @@ export const applyGrand = (formatted_data) => {
   // Helper function to recursively convert values to integers
   const convertToInteger = (value, columnIndex) => {
     if (Array.isArray(value)) {
-      return value.map((item, index) => (index === 0 && columnIndex === 0 ? item : convertToInteger(item, columnIndex)));
-    } else if (typeof value === 'object') {
-      const result = {};
-      for (const key in value) {
-        result[key] = convertToInteger(value[key], columnIndex);
-      }
-      return result;
-    } else {
-      // Skip converting the first column and replace commas
-      return columnIndex === 0 ? value.replace(/,/g, '') : parseInt(value.replace(/,/g, ''), 10);
+      return value.map((item, index) => (index === 0 && columnIndex === 0 ? item : convertToInteger(parseInt(item.replace(/,/g, ''), 10), columnIndex)));
     }
   };
 
