@@ -175,13 +175,13 @@ export const applyGrand = (formatted_data) => {
     return filtered.map((row) => {
       // Assuming cellToGrid is a function returning cell references like 'A1', 'B2', etc.
       const cellReference = cellToGrid(cp, row);
-      return `INDIRECT("${cellReference}")`;  // Use INDIRECT to handle cell references with commas
+      return cellReference;
     });
   });
 
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
-    ...sums.map((s) => `=SUM(${s.join(",")})`),
+    ...sums.map((s) => `=SUM(${s.map(cell => `'${cell}'`).join(",")})`),
   ]);
 
   return {
@@ -190,6 +190,7 @@ export const applyGrand = (formatted_data) => {
     grand_total_row: data.length - 1,
   };
 };
+
 
 
 
