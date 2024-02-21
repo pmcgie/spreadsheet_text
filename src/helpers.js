@@ -161,11 +161,17 @@ export const applyGrand = (formatted_data) => {
   let { data, groups, columns, pivot_values, row_total_column } =
     formatted_data;
   const id_column_index = columns.indexOf("_ids");
-  const filtered = [...data.keys()].filter((i) => data[i][id_column_index]);
-
+  const filtered = [...data.keys()].filter((i) => {
+    let value = data[i][id_column_index];
+    if (value) {
+      data[i][id_column_index] = parseInt(value.replace(/[\$,]/g, ''), 10);
+      return true;
+    }
+    return false;
+  });
   let col_pivots = pivot_values.map((pv) => columns.indexOf(pv));
   if (row_total_column && row_total_column > -1) {
-    col_pivots.splice(0, 0, parseInt(row_total_column.replace(/[\$,]/g, ''), 10));
+    col_pivots.splice(0, 0, row_total_column);
   }
   const sums = col_pivots.map((cp) => {
     return filtered.map((f) => {
@@ -178,6 +184,8 @@ export const applyGrand = (formatted_data) => {
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
     ...sums.map((s) => `=SUM(${s.join(",")})`),
   ]);
+
+  data = data.map(row => row.map(cell => cell.replace(/[$,]/g, '')))
 
   return {
     ...formatted_data,
