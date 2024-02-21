@@ -169,13 +169,15 @@ export const applyGrand = (formatted_data) => {
   }
   const sums = col_pivots.map((cp) => {
     return filtered.map((f) => {
-      return `${cellToGrid(cp, f)}`;
+      // Wrap each individual value with double quotes
+      return `"${cellToGrid(cp, f)}"`;
     });
   });
   if (!data) return formatted_data;
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
-    ...sums.map((s) => `=SUM(${s.join(";")})`),
+    // Join the values with commas and wrap the entire expression in SUM
+    `=SUM(${sums.map((s) => s.join(",")).join(",")})`,
   ]);
   return {
     ...formatted_data,
@@ -183,6 +185,7 @@ export const applyGrand = (formatted_data) => {
     grand_total_row: data.length - 1,
   };
 };
+
 
 
 const colToLetter = (col) => {
