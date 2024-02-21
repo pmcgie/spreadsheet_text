@@ -170,8 +170,9 @@ export const applyGrand = (formatted_data) => {
 
   const sums = col_pivots.map((cp) => {
     return filtered.map((f) => {
-      // Assuming cellToGrid(cp, f) returns numeric values
-      return cellToGrid(cp, f);
+      const value = `${cellToGrid(cp, f)}`;
+      const intValue = value.includes(',') ? parseInt(value.replace(/,/g, ''), 10) : value;
+      return intValue;
     });
   });
 
