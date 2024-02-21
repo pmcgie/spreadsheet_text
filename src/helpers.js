@@ -162,12 +162,12 @@ export const applyGrand = (formatted_data) => {
     formatted_data;
 
   // Map over each row and remove characters $ and , from each cell
-  data = data.map(row => row.map(cell => cell.replace(/[$,]/g, '')));
+  const altered_data = altered_data.map(row => row.map(cell => cell.replace(/[$,]/g, '')));
 
   const id_column_index = columns.indexOf("_ids");
   
   // Filter rows based on the truthiness of the corresponding cell in the "_ids" column
-  const filtered = [...data.keys()].filter((i) => data[i][id_column_index]);
+  const filtered = [...altered_data.keys()].filter((i) => altered_data[i][id_column_index]);
 
   // Prepare an array of column indices specified in pivot_values
   let col_pivots = pivot_values.map((pv) => columns.indexOf(pv));
@@ -187,7 +187,7 @@ export const applyGrand = (formatted_data) => {
   });
 
   // If data doesn't exist, return the original formatted_data
-  if (!data) 
+  if (!altered_data) 
     return formatted_data;
 
   // Add a new row to data containing the "Grand Total" label and the sums
