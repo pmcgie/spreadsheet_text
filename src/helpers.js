@@ -158,6 +158,24 @@ export const applySub = (formatted_data) => {
 };
 
 export const applyGrand = (formatted_data) => {
+  // Helper function to recursively convert values to integers
+  const convertToInteger = (value) => {
+    if (Array.isArray(value)) {
+      return value.map(convertToInteger);
+    } else if (typeof value === 'object') {
+      const result = {};
+      for (const key in value) {
+        result[key] = convertToInteger(value[key]);
+      }
+      return result;
+    } else {
+      return parseInt(value, 10);
+    }
+  };
+
+  // Convert all values in formatted_data to integers
+  formatted_data = convertToInteger(formatted_data);
+
   let { data, groups, columns, pivot_values, row_total_column } =
     formatted_data;
   const id_column_index = columns.indexOf("_ids");
@@ -170,26 +188,16 @@ export const applyGrand = (formatted_data) => {
 
   const sums = col_pivots.map((cp) => {
     return filtered.map((f) => {
-      const value = `${cellToGrid(cp, f)}`;
-      const intValue = value.includes(',') ? parseInt(value.replace(/,/g, ''), 10) : value;
-      return intValue;
+      // Update this line to parse the cell value to an integer
+      return parseInt(cellToGrid(cp, f), 10);
     });
   });
 
-  if (!data) {
-    // Replace commas with nothing in formatted_data properties
-    for (const prop in formatted_data) {
-      if (formatted_data.hasOwnProperty(prop) && typeof formatted_data[prop] === 'string') {
-        formatted_data[prop] = formatted_data[prop].replace(/,/g, '');
-      }
-    }
-  
-    return formatted_data;
-  } else {
+  if (!data) return formatted_data;
+
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
-    // Join the values with commas and wrap the entire expression in SUM
-    ...sums.map((s) => `=SUM(${s.join(",")})`),  
+    ...sums.map((s) => `=SUM(${s.join(",")})`),
   ]);
 
   return {
@@ -197,7 +205,8 @@ export const applyGrand = (formatted_data) => {
     data,
     grand_total_row: data.length - 1,
   };
-}};
+};
+
 
 
 
