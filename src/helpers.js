@@ -161,7 +161,7 @@ export const applyGrand = (formatted_data) => {
   // Helper function to recursively convert values to integers
   const convertToInteger = (value, columnIndex) => {
     if (Array.isArray(value)) {
-      return value.map((item, index) => (index === 0 && columnIndex === 0 ? item : convertToInteger(item.replace(/,/g, ''), columnIndex)));
+      return value.map((item, index) => (index === 0 && columnIndex === 0 ? item : convertToInteger(item.replace(/[$,]/g, ''), columnIndex)));
     }
   };
 
@@ -181,7 +181,7 @@ export const applyGrand = (formatted_data) => {
   const sums = col_pivots.map((cp) => {
     return filtered.map((f) => {
       // Update this line to parse the cell value to an integer
-      return parseInt(cellToGrid(cp, f), 10);
+      return cellToGrid(cp, f);
     });
   });
 
