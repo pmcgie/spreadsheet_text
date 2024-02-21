@@ -177,16 +177,10 @@ export const applyGrand = (formatted_data) => {
   });
 
   if (!data) return formatted_data;
-
-  // Summing up the numeric values without commas
-  const rowTotal = sums[0].map((_, i) =>
-    sums.reduce((total, sum) => total + parseFloat(sum[i] || 0), 0)
-  );
-
   data.push([
     ...groups.map((p, i) => (i === 0 ? "Grand Total" : "")),
     // Join the values with commas and wrap the entire expression in SUM
-    `=SUM(${rowTotal.join(",")})`,
+    ...sums.map((s) => `=SUM(${s.join(",")})`),  
   ]);
 
   return {
