@@ -48,22 +48,26 @@ export const dataToRows = (data, pivot, groups, value, id) => {
 
 export const changesToData = (array_data, changes, row_total = false) => {
   const { data, value, groups, id } = array_data;
-  const latest = [];
-  changes.reverse().forEach((change) => {
-    const found_cell = find(latest, { row: change[0], column: change[1] });
-    if (!found_cell) {
-      latest.push({
-        row: change[0],
-        column: change[1],
-        new_val: change[3],
-      });
-    }
+
+  const map = new Map();
+
+  changes.forEach((change) => {
+    const key = `${change[0]}-${change[1]}`;
+    map.set(key, {
+      row: change[0],
+      column: change[1],
+      new_val: change[3],
+    });
   });
-  return latest.map((item) => {
+
+  return Array.from(map.values()).map((item) => {
     const row = data[item.row];
-    const total_column = row_total ? -1 : 0;
-    const id_index = item.column - groups.length + total_column;
+    const adjust = row_total ? -1 : 0;
+
+    const id_index = item.column - groups.length + adjust;
+
     const data_id = JSON.parse(row[row.length - 1])[id_index];
+
     return {
       [id]: data_id,
       [value]: item.new_val,
